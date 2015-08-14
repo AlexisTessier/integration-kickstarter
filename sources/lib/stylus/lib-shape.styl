@@ -1,0 +1,19 @@
+shape_block(width = 0, height = width)
+	display block
+	width width
+	height height
+	
+shape_color(color = false)
+	if color
+		background-color color
+
+shape_rect(width, height, color = false)
+	shape_block width height
+	shape_color color
+
+shape_square(size, color = false)
+	shape_rect size size color
+	
+shape_circle(size, color = false)
+	shape_square size color
+	border-radius 50%

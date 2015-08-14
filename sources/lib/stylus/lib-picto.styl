@@ -1,0 +1,39 @@
+spritesheet(spritesheetName, width, height = width, device = 'desktop')
+	image(imagePath(spritesheetName, device), width, height)
+	background-repeat no-repeat
+
+spritesheet_desktop(spritesheetName, width, height = width)
+	spritesheet(spritesheetName, width, height, 'desktop')
+	
+spritesheet_tablet(spritesheetName, width, height = width)
+	spritesheet(spritesheetName, width, height, 'tablet')
+	
+spritesheet_mobile(spritesheetName, width, height = width)
+	spritesheet(spritesheetName, width, height, 'mobile')
+
+/*---------------------------*/
+
+spritesheet-part(width, height = width, x = 0, y = x)
+	shape_block(width, height)
+	background-position : (- x) (- y)
+
+sprite(width, height = width, col = 0, row = 0)
+	spritesheet-part(width, height, (( col * width )px), (( row * height )px))
+	
+	
+/*---------------------------*/
+
+picto(imageName, width, height = width, device = 'desktop')
+	spritesheet(imageName, width, height, device)
+	shape_block(width, height)
+
+picto_desktop(imageName, width, height = width)
+	picto(imageName, width, height, 'desktop')
+
+picto_tablet(imageName, width, height = width)
+	picto(imageName, width, height, 'tablet')
+
+picto_mobile(imageName, width, height = width)
+	picto(imageName, width, height, 'mobile')
+
+/*--------------------------*/

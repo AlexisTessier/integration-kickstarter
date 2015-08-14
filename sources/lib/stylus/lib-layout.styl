@@ -1,0 +1,48 @@
+layout_sectionWidth = 1800px
+layout_containerWidth = 1100px
+layout_tablet_containerWidth = (1376px / 2)
+layout_mobile_containerWidth = 100%
+
+layout_centeredBlock(width = layout_containerWidth)
+	display block
+	margin auto
+	max-width 100%
+	width 100%
+	
+	>*{
+		display block
+		margin auto
+		width width
+		max-width 100%
+	}
+	
+layout_container(device = 'desktop')
+	if device == 'desktop'
+		layout_centeredBlock layout_containerWidth
+	else if device == 'tablet'
+		layout_centeredBlock layout_tablet_containerWidth
+	else if device == 'mobile'
+		layout_centeredBlock layout_mobile_containerWidth
+
+layout_section(device = 'desktop')
+	display block
+	margin auto
+	max-width 100%
+	width layout_sectionWidth
+
+/*-----------*/
+/*--classes--*/
+/*-----------*/
+
+.layout-2-col
+	display block
+	clearfix()
+	
+.layout-col
+	col(1/2)
+	
+.mobile
+	.layout-col
+		stack()
+		+.layout-col
+			margin-top 55px

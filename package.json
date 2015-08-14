@@ -1,0 +1,44 @@
+{
+  "name": "integration-kickstarter",
+  "version": "1.0.0",
+  "description": "Front-end kickstarter project",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:AlexisTessier/integration-kickstarter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-batch": "^1.0.5",
+    "gulp-browserify": "^0.5.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-header": "^1.2.2",
+    "gulp-imagemin": "^2.3.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-jade-globbing": "^0.1.7",
+    "gulp-out": "0.0.1",
+    "gulp-plumber": "^1.0.1",
+    "gulp-replace": "^0.5.4",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-stylus": "^2.0.6",
+    "gulp-uglify": "^1.2.0",
+    "gulp-watch": "^4.3.4",
+    "imagemin-pngquant": "^4.1.2",
+    "jeet": "^6.1.2",
+    "mkdirp": "^0.5.1",
+    "nib": "^1.1.0",
+    "open": "0.0.5"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "slick-carousel": "^1.5.8",
+    "snapsvg": "^0.4.0"
+  }
+}

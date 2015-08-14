@@ -1,0 +1,28 @@
+button_on()
+	&:hover, &:focus
+		{block}
+
+button_active()
+	&.active
+		{block}
+		
+button_on-active()
+	+button_on()
+		{block}
+	+button_active()
+		{block}
+
+button_link(defaultColor = black, onColor = blue, onDecoration = underline, defaultDecoration = none)
+	color defaultColor
+	text-decoration defaultDecoration
+	
+	&:hover, &:focus
+		color onColor
+		text-decoration onDecoration
+		
+		{block}
+	
+	&.active
+		color onColor
+		
+		{block}

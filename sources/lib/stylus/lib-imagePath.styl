@@ -1,0 +1,13 @@
+imagePath_defaultImageFolderPath = '../image/style/'
+
+imagePath(name, device = "desktop")
+	return imagePath_defaultImageFolderPath+device+"/"+name
+
+imagePath_desktop(name)
+	return imagePath(name, "desktop")
+
+imagePath_tablet(name)
+	return imagePath(name, "tablet")
+
+imagePath_mobile(name)
+	return imagePath(name, "mobile")
