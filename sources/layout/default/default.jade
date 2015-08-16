@@ -8,12 +8,19 @@ html(class="no-js")
 
 		block scripts
 			script(type="text/javascript" src='./javascript/fallback.min.js')
+			if commandLineOption.scriptSingleFile
+				script(type="text/javascript").
+					window.javascriptImport = ["./javascript/all.min.js"];
+			else
+				script(type="text/javascript").
+					window.javascriptImport = ["./javascript/bundle.js", "./javascript/main.min.js"];
+
 			script(type="text/javascript").
 				var fallback = fallback || false;
 				if(fallback) {
 					fallback.load({
 						stylesheet : "./stylesheet/main.css",
-						javascript : ["./javascript/bundle.js", "./javascript/main.min.js"]
+						javascript : window.javascriptImport
 					});
 					fallback.ready(function () {
 						layoutDefaultScript.call();

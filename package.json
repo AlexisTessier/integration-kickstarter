@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "glob": "^5.0.14",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",
     "gulp-browserify": "^0.5.1",
@@ -24,6 +25,7 @@
     "gulp-jade-globbing": "^0.1.7",
     "gulp-out": "0.0.1",
     "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-stylus": "^2.0.6",
