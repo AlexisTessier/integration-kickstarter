@@ -45,17 +45,42 @@ var blockInclude = '\n$1include '+path.join("../../page-block", '$2.jade\n');
 /*===========================================*/
 /*===========================================*/
 
-var sourcePath = path.join(__dirname, 'sources');
-var buildPath = path.join(__dirname, 'build');
+var appPath = {};
 
-var componentPath = path.join(sourcePath, 'component');
+appPath.source = path.join(__dirname, 'sources');
+appPath.javascript = path.join(appPath.source, 'javascript');
+appPath.stylus = path.join(appPath.source, 'stylus');
+
+var assetPath = path.join(sourcePath, 'asset'),
+	imagePath = path.join(assetPath, 'image'),
+	fontPath = path.join(assetPath, 'font');
+
+var libPath = path.join(sourcePath, 'lib'),
+	libAllPath = path.join(libPath, '*'),
+	libJavascriptPath = path.join(libAllPath, '*.js'),
+	libStylusPath = path.join(libAllPath, '*.styl'),
+	libTaskPath = path.join(libAllPath, 'task'),
+	libTaskAllPath = path.join(libTaskPath, '*.js');
+
+var componentPath = path.join(sourcePath, 'component'),
+	componentAllPath = path.join(componentPath, '*'),
+	componentAssetPath = path.join(componentAllPath, 'asset'),
+	componentImagePath = path.join(componentAssetPath, 'image'),
+	componentFontPath = path.join(componentAssetPath, 'font'),
+	componentJadePath = path.join(componentAllPath, '*.jade');
+
+var pageBlockPath = path.join(sourcePath, 'page-block');
 var layoutPath = path.join(sourcePath, 'layout');
 var pagePath = path.join(sourcePath, 'page');
-var javascriptPath = path.join(sourcePath, 'javascript');
 
-var pageBuildDirectoryPath = path.join(buildPath, 'page');
-var stylesheetBuildDirectoryPath = path.join(pageBuildDirectoryPath, 'stylesheet');
-var javascriptBuildDirectoryPath = path.join(pageBuildDirectoryPath, 'javascript');
+
+
+/*----------------------------------------------------*/
+
+var buildPath = path.join(__dirname, 'build');
+
+var stylesheetBuildPath = path.join(buildPath, 'stylesheet');
+var javascriptBuildPath = path.join(buildPath, 'javascript');
 
 /*===========================================*/
 /*================Livereload=================*/

@@ -7,7 +7,7 @@ var ease = (function() {
 		return t;
 	};
 
-	ease.linear = function easeNone(t){
+	ease.linear = function easeLinear(t){
 		return t;
 	};
 

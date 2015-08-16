@@ -16,10 +16,10 @@ html(class="no-js")
 						javascript : ["./javascript/bundle.js", "./javascript/main.min.js"]
 					});
 					fallback.ready(function () {
-						layoutDefaultMain();
+						layoutDefaultScript.call();
 					});
 				}
 
 body
-	#default-body-wrapper
+	.layout-default-body-wrapper
 		block body

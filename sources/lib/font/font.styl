@@ -1,0 +1,18 @@
+mainFontSize = 18
+
+html
+	font-size mainFontSize px
+
+font_pxToRem(pxValue)
+	return (pxValue/mainFontSize)rem
+
+font_remSize(sizeValue = mainFontSize)
+	font-size : sizeValue px
+	font-size : font_pxToRem(sizeValue)
+
+font_base(fontName, size = mainFontSize, transform = false)
+	font-family fontName
+	font_remSize size
+		
+	if transform
+		text-transform transform
