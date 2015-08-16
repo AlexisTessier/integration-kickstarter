@@ -1,4 +1,4 @@
-var DeviceManager = (function() {
+/*var DeviceManager = (function() {
 	'use strict';
 
 	function DeviceManager(params) {
@@ -261,4 +261,4 @@ var DeviceManager = (function() {
 	};
 
 	return DeviceManager;
-}());
+}());*/

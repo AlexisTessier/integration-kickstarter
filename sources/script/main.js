@@ -1,3 +1,3 @@
 window.main = function main () {
-	alert('Hello guy !!!');
+	//alert('Hello guy !!!');
 };

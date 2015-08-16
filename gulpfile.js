@@ -45,7 +45,7 @@ var blockInclude = '\n$1include '+path.join("../../page-block", '$2.jade\n');
 /*---------------------------------*/
 
 var app = require('./app-path');
-
+var config = require(app.configuration);
 var commandLineOption = require('./command-line-option');
 
 /*===========================================*/
@@ -135,7 +135,9 @@ var jadeFileToWatch = [];
 jadeFileToWatch.push(app.componentJade);
 jadeFileToWatch.push(app.pageBlockJade);
 jadeFileToWatch.push(app.layoutJade);
-jadeFileToWatch.push(app.padeJade);
+jadeFileToWatch.push(app.pageJade);
+
+console.log(jadeFileToWatch);
 
 gulp.task('watch-jade', function () {
 	watch(jadeFileToWatch, batch(function (events, done) {
@@ -209,7 +211,13 @@ scriptFileToWatch.push(app.mainScript);
 var scriptBuildDestPath = path.join(app.javascript, '{basename}{extension}');
 var scriptSingleFileTempDestPath = path.join(app.singleFileScript, '{basename}{extension}');
 
-gulp.task('script-full', ['script', 'script-vendor'], function () {
+var scriptAllTaskList = ['script', 'script-vendor'];
+
+if (commandLineOption.scriptSingleFile) {
+	scriptAllTaskList.push('script-single-file');
+}
+
+gulp.task('script-all', scriptAllTaskList, function () {
 	gulp.src(app.fallbackScript)
 		.pipe(plumber())
 		.pipe(out(scriptBuildDestPath));
@@ -240,12 +248,8 @@ gulp.task('script', ['pre-script'], function () {
 
 });
 
-var javascriptBundlePath = path.join(javascriptPath, 'bundle');
-var javascriptBundleIndexPath = path.join(javascriptBundlePath, 'bundle.js');
-var javascriptBundleAll = path.join(javascriptBundlePath, '*.js');
-
-gulp.task('javascript-bundle', ['pre-javascript'], function () {
-    gulp.src(javascriptBundleIndexPath)
+gulp.task('script-vendor', ['pre-script'], function () {
+    var stream = gulp.src(app.vendorScript)
         .pipe(browserify({
           insertGlobals : true
         }))
@@ -254,83 +258,94 @@ gulp.task('javascript-bundle', ['pre-javascript'], function () {
                 negate_iife: false
             }
         }))
-        .pipe(out(javascriptRenderDestPath))
+        .pipe(out(scriptBuildDestPath))
+
+    if (commandLineOption.scriptSingleFile) {
+    	stream
+    		.pipe(rename('02.js'))
+    		.pipe(out(scriptSingleFileTempDestPath))
+    }
+});
+
+gulp.task('script-single-file', ['pre-script'], function() {
+	gulp.src(app.singleFileScriptAll)
+		.pipe(plumber())
+		.pipe(concat('all.min.js'))
+		.pipe(uglify({
+            compress: {
+                negate_iife: false
+            }
+        }))
+        .pipe(out(scriptBuildDestPath))
+});
+
+gulp.task('watch-script', function () {
+	watch(scriptFileToWatch, batch(function (events, done) {
+		gulp.start('script', done);
+	}));
 });
 
 // /*===========================================*/
 // /*===========================================*/
 // /*===========================================*/
 
-// var imagesAll = [];
-// imagesAll.push(path.join(sourcePath, ('image/final/**')));
+var imageToBuild = [];
+imageToBuild.push(app.imageAll);
+imageToBuild.push(app.libImageAll);
+imageToBuild.push(app.componentImageAll);
+imageToBuild.push(app.pageBlockImageAll);
+imageToBuild.push(app.layoutImageAll);
+imageToBuild.push(app.pageImageAll);
 
-// var imageRenderDestPath = path.join(pageBuildDirectoryPath, 'image');
+var imageBuildDestPath = path.join(app.build, 'asset');
 
-// gulp.task('image-min', function () {
-// 	if (!commandLineOption.noImage) {
-// 		gulp.src(imagesAll)
-//         .pipe(plumber())
-//         .pipe(imagemin({
-//             progressive: true,
-//             svgoPlugins: [{removeViewBox: false}],
-//             use: [pngquant()]
-//         }))
-//         .pipe(gulp.dest(imageRenderDestPath));
-// 	}
-// });
+gulp.task('image-min', function () {
+	if (!commandLineOption.noImageMin) {
+		gulp.src(imageToBuild)
+        .pipe(plumber())
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest(imageBuildDestPath));
+	}
+});
 
 // /*===========================================*/
 // /*==================Fonts====================*/
 // /*===========================================*/
 
-// var fontPath = path.join(sourcePath, 'font');
+var fontBuildDestPath = path.join(app.build, 'asset');
 
-// var fontsList = [];
-// fontsList.push(path.join(fontPath, '*.eot'));
-// fontsList.push(path.join(fontPath, '*.svg'));
-// fontsList.push(path.join(fontPath, '*.ttf'));
-// fontsList.push(path.join(fontPath, '*.woff'));
-// fontsList.push(path.join(fontPath, '*.woff2'));
+var fontList = [];
+_.forEach(config.font.formatList, function(format) {
+	fontList.push(path.join(app.font, '*.'+format));
+});
 
-// var fontCopyDestPath = path.join(pageBuildDirectoryPath, 'font');
+gulp.task('font', function () {
+	gulp.src(fontList)
+		.pipe(plumber())
+		.pipe(gulp.dest(fontBuildDestPath));
+});
 
-// gulp.task('font', function () {
-// 	gulp.src(fontsList)
-// 		.pipe(plumber())
-// 		.pipe(gulp.dest(fontCopyDestPath));
-// });
+/*===========================================*/
+/*===========================================*/
+/*===========================================*/
 
-// /*===========================================*/
-// /*===========================================*/
-// /*===========================================*/
+/*---------------*/
+var buildSubTaskList = ['font', 'image-min', 'jade', 'stylus', 'script-all'];
+gulp.task('build', buildSubTaskList);
+/*--------------*/
 
-// /*---------------*/
-// var buildSubTaskList = ['font', 'image-min', 'jade', 'stylus', 'javascript-full'];
-// gulp.task('build', buildSubTaskList);
-// /*--------------*/
+gulp.task('watch', ['build', 'watch-jade', 'watch-stylus', 'watch-script']);
 
-// gulp.task('watch-javascript-full', ['javascript-full', 'watch-javascript', 'watch-javascript-bundle']);
+gulp.task('server', ['watch', 'connect', 'open-once']);
 
-// gulp.task('watch-javascript', function () {
-// 	watch(scriptFilesToWatch, batch(function (events, done) {
-// 		gulp.start('javascript', done);
-// 	}));
-// });
+gulp.task('server-livereload', ['server'], function () {
+	watch(app.server, batch(function (events, done) {
+		gulp.start('livereload', done);
+	}))
+});
 
-// gulp.task('watch-javascript-bundle', function () {
-// 	watch(javascriptBundleAll, batch(function (events, done) {
-// 		gulp.start('javascript-bundle', done);
-// 	}));
-// });
-
-// gulp.task('watch', ['build', 'watch-jade', 'watch-stylus', 'watch-javascript-full']);
-
-// gulp.task('server', ['watch', 'connect', 'open-once']);
-
-// gulp.task('server-livereload', ['server'], function () {
-// 	watch(serverFilesToReload, batch(function (events, done) {
-// 		gulp.start('livereload', done);
-// 	}))
-// });
-
-// gulp.task('default', ['build']);
+gulp.task('default', ['build']);
