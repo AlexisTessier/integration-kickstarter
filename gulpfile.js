@@ -105,8 +105,7 @@ var jadeGlobalVariables = {
 };
 
 var jadePlaceholder = {
-	'component': app.componentJade,
-	'page-block' : app.pageBlockJade,
+	'component': app.componentJade
 };
 
 var jadeLayoutFileList = glob.sync(app.layoutJade);
@@ -120,20 +119,18 @@ gulp.task('jade', ['pre-jade'], function () {
 	gulp.src(jadeFileToBuild)
 		.pipe(plumber())
 		.pipe(header('include {component}\n'))
-		.pipe(header('include {page-block}\n'))
 		.pipe(jadeGlobbing({
 			placeholder: jadePlaceholder
 		}))
 		.pipe(jade({
 			locals: jadeGlobalVariables,
-			pretty : '    '
+			pretty : '\t'
 		}))
 		.pipe(out(jadeBuildDestPath))
 });
 
 var jadeFileToWatch = [];
 jadeFileToWatch.push(app.componentJade);
-jadeFileToWatch.push(app.pageBlockJade);
 jadeFileToWatch.push(app.layoutJade);
 jadeFileToWatch.push(app.pageJade);
 
@@ -160,7 +157,6 @@ var stylusFileToWatch = [];
 stylusFileToWatch.push(app.stylusAll);
 stylusFileToWatch.push(app.libStylus);
 stylusFileToWatch.push(app.componentStylus);
-stylusFileToWatch.push(app.pageBlockStylus);
 stylusFileToWatch.push(app.layoutStylus);
 stylusFileToWatch.push(app.pageStylus);
 
@@ -195,7 +191,6 @@ gulp.task('pre-script', function () {
 var scriptFileToBuild = [];
 scriptFileToBuild.push(app.libScript);
 scriptFileToBuild.push(app.componentScript);
-scriptFileToBuild.push(app.pageBlockScript);
 scriptFileToBuild.push(app.layoutScript);
 scriptFileToBuild.push(app.pageScript);
 scriptFileToBuild.push(app.mainScript);
@@ -203,7 +198,6 @@ scriptFileToBuild.push(app.mainScript);
 var scriptFileToWatch = [];
 scriptFileToWatch.push(app.libScript);
 scriptFileToWatch.push(app.componentScript);
-scriptFileToWatch.push(app.pageBlockScript);
 scriptFileToWatch.push(app.layoutScript);
 scriptFileToWatch.push(app.pageScript);
 scriptFileToWatch.push(app.mainScript);
@@ -293,7 +287,6 @@ var imageToBuild = [];
 imageToBuild.push(app.imageAll);
 imageToBuild.push(app.libImageAll);
 imageToBuild.push(app.componentImageAll);
-imageToBuild.push(app.pageBlockImageAll);
 imageToBuild.push(app.layoutImageAll);
 imageToBuild.push(app.pageImageAll);
 

@@ -6,15 +6,8 @@ layout_mobile_containerWidth = 100%
 layout_centeredBlock(width = layout_containerWidth)
 	display block
 	margin auto
-	max-width 100%
-	width 100%
-	
-	>*{
-		display block
-		margin auto
-		width width
-		max-width 100%
-	}
+	max-width 90%
+	width width
 	
 layout_container(device = 'desktop')
 	if device == 'desktop'
@@ -30,19 +23,42 @@ layout_section(device = 'desktop')
 	max-width 100%
 	width layout_sectionWidth
 
+layout_grid(selector, blockSelector, baseWidth, numberOfColumns, gutter, rowGutter = 0, gutterProperty = 'margin')
+	numberOfGutter = (numberOfColumns - 1)
+	availableWidth = baseWidth - (numberOfGutter*gutter)
+	baseColumnWidth = availableWidth / numberOfColumns
+	
+	columnWidth = ((baseColumnWidth / baseWidth) * 100%)
+	gutterWidth = ((gutter / baseWidth) * 100%)
+
+	{selector}
+		display block
+		clearfix()
+		max-width 100%
+		
+		{blockSelector}
+			display block
+			float left
+			width columnWidth
+			{gutterProperty}-bottom rowGutter
+			
+			+{blockSelector}
+				{gutterProperty}-left gutterWidth
+
+			&:nth-child({numberOfColumns}n+1)
+				{gutterProperty}-left 0
+			
+			for index in (1..(numberOfColumns))
+				&:nth-child({numberOfColumns}n+{index})
+					&:nth-last-child(-n+{(numberOfColumns - index + 1)})
+						{gutterProperty}-bottom 0
+			
 /*-----------*/
 /*--classes--*/
 /*-----------*/
 
-.layout-2-col
-	display block
-	clearfix()
-	
-.layout-col
-	col(1/2)
-	
-.mobile
-	.layout-col
-		stack()
-		+.layout-col
-			margin-top 55px
+.container
+	layout_container()
+
+.section
+	layout_section()

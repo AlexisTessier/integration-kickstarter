@@ -7,8 +7,9 @@ var ScrollManager = (function() {
 			return new ScrollManager(params);
 		}
 
-		this.document = params.$document;
+		this.document = $(params.document);
 		this.timeManager = params.timeManager;
+		this.frame = params.frame;
 
 		var self = this;
 
@@ -27,8 +28,6 @@ var ScrollManager = (function() {
 		};
 
 		this.scrollEventList = [];
-
-		this.init();
 	}
 
 	ScrollManager.prototype.init = function() {
@@ -38,6 +37,8 @@ var ScrollManager = (function() {
 		});
 
 		this.update(this.timeManager.time);
+
+		return this;
 	};
 
 	ScrollManager.prototype.update = function(time) {
@@ -52,7 +53,7 @@ var ScrollManager = (function() {
 		this.scroll.toDown ? this.scroll.timeSinceLastChangeToDown = 0 : this.scroll.timeSinceLastChangeToDown += time.delta;
 
 
-		if(device.resize.both){
+		if(this.frame.resize.both){
 			this.scroll.change = true;
 		}
 

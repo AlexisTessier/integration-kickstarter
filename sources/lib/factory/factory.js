@@ -5,22 +5,35 @@ var factory = (function() {
 
 	factory.create = {};
 
-	factory.create.forEach = function ($elList) {
-		return {
-			component : function (_constructor) {
-				var componentList = [];
-				$elList.each(function(index, el) {
-					componentList.push(factory.create.component(_constructor, $(el)));
-				});
+	factory.create = function (_constructor) {
+		var init = false;
+		var forEachFunc = function ($elList) {
+			var componentList = [];
+			$elList.each(function(index, el) {
+				componentList.push(factory.create.component(_constructor, $(el), init));
+			});
 
-				return componentList;
-			}
+			return componentList;
+		};
+
+		return {
+			andInit : function () {
+				init = true;
+				return {
+					forEach : forEachFunc
+				};
+			},
+			forEach : forEachFunc
 		};
 	};
 
-	factory.create.component = function (_constructor, $el) {
+	factory.create.component = function (_constructor, $el, init) {
 		if ($el.size()) {
-			return new _constructor($el);
+			var component = new _constructor($el);
+			if (init) {
+				component.init();
+			};
+			return component;
 		}
 		return null;
 	};

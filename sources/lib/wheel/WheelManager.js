@@ -7,8 +7,11 @@ var WheelManager = (function() {
 			return new WheelManager(params);
 		}
 
+		WheelManager.mousewheel.install();
+
 		this.timeManager = params.timeManager;
 		this.target = $(params.target);
+		this.preventDefaultEvent = params.preventDefaultEvent;
 
 		this.wheel = {
 			move : 0,
@@ -34,7 +37,9 @@ var WheelManager = (function() {
 		var self = this;
 
 		this.target.mousewheel(function(event) {
-			event.preventDefault();
+			if(self.preventDefaultEvent){
+				event.preventDefault();
+			}
 			self.wheel.move += event.deltaY;
 		});
 
@@ -68,7 +73,7 @@ var WheelManager = (function() {
 			timeSinceLastChangeToUp = this.wheel.timeSinceLastChangeToUp,
 			timeSinceLastChangeToDown = this.wheel.timeSinceLastChangeToDown;
 
-		wheel.debounce = function (delay) {
+		this.wheel.debounce = function (delay) {
 			return {
 				toUp : (toUp && timeSinceLastChangeToUp >= delay),
 				toDown : (toDown && timeSinceLastChangeToDown >= delay),
@@ -85,6 +90,16 @@ var WheelManager = (function() {
 		}
 
 		this.wheel.move = 0;
+	};
+
+	WheelManager.mousewheel = {
+		installed : false,
+		install : function () {
+			if (!WheelManager.mousewheel.installed) {
+				installMousewheel();
+			}
+			WheelManager.mousewheel.installed = true;
+		}
 	};
 
 	return WheelManager;

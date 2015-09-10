@@ -17,8 +17,6 @@ var TimeManager = (function() {
 		this.frameEventList = [];
 
 		this.timeOutList = [];
-
-		this.init();
 	}
 
 	TimeManager.prototype.init = function() {
@@ -27,6 +25,8 @@ var TimeManager = (function() {
 			self.frameEvent();
 			requestAnimationFrame(requestAnimationFrameEvent);
 		});
+
+		return this;
 	};
 
 	TimeManager.prototype.updateTime = function() {

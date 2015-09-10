@@ -10,9 +10,12 @@ font_remSize(sizeValue = mainFontSize)
 	font-size : sizeValue px
 	font-size : font_pxToRem(sizeValue)
 
-font_base(fontName, size = mainFontSize, transform = false)
-	font-family fontName
+font_base(fontName, size = mainFontSize, transform = false, defaultFont = sans-serif)
+	font-family : fontName, defaultFont
 	font_remSize size
 		
 	if transform
 		text-transform transform
+
+font_lineHeight(sizeValue = mainFontSize)
+	line-height : font_pxToRem(sizeValue)

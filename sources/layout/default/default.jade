@@ -1,13 +1,16 @@
 doctype
 html(class="no-js")
 	head
-		title Integration Kickstarter
+		block title
+			title Integration Kickstarter
+
 		meta(charset="utf-8")
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, height=device-height, initial-scale=1, user-scalable=no, maximum-scale=1')
 
 		block scripts
 			script(type="text/javascript" src='./javascript/fallback.min.js')
+
 			if commandLineOption.scriptSingleFile
 				script(type="text/javascript").
 					window.javascriptImport = ["./javascript/all.min.js"];
@@ -16,10 +19,14 @@ html(class="no-js")
 					window.javascriptImport = ["./javascript/vendor.js", "./javascript/main.min.js"];
 
 			script(type="text/javascript").
+				window.stylesheetImport = ["./stylesheet/main.css"];
+				
+				window.app = {};
 				var fallback = fallback || false;
+
 				if(fallback) {
 					fallback.load({
-						stylesheet : "./stylesheet/main.css",
+						stylesheet : window.stylesheetImport,
 						javascript : window.javascriptImport
 					});
 					fallback.ready(function () {

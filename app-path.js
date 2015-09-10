@@ -47,15 +47,6 @@ app.componentAsset = path.join(app.componentAll, 'asset');
 app.componentImage = path.join(app.componentAsset, 'image');
 app.componentImageAll = path.join(app.componentImage, '**/*.*');
 
-app.pageBlock = path.join(app.source, 'page-block');
-app.pageBlockAll = path.join(app.pageBlock, '*');
-app.pageBlockJade = path.join(app.pageBlockAll, '*.jade');
-app.pageBlockStylus = path.join(app.pageBlockAll, '*.styl');
-app.pageBlockScript = path.join(app.pageBlockAll, '*.js');
-app.pageBlockAsset = path.join(app.pageBlockAll, 'asset');
-app.pageBlockImage = path.join(app.pageBlockAsset, 'image');
-app.pageBlockImageAll = path.join(app.pageBlockImage, '**/*.*');
-
 app.layout = path.join(app.source, 'layout');
 app.layoutAll = path.join(app.layout, '*');
 app.layoutJade = path.join(app.layoutAll, '*.jade');

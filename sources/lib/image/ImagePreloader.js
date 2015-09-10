@@ -9,15 +9,13 @@ var ImagePreloader = (function() {
 			return new ImagePreloader(UILoaderComponent);
 		}
 		
-		this.init();
-
 		this.UILoaderComponent = UILoaderComponent;
 
 		this.indexedTarget = {};
 	}
 
 	ImagePreloader.prototype.init = function() {
-
+		return this;
 	};
 
 	ImagePreloader.prototype.registerDefaultImageList = function() {

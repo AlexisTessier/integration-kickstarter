@@ -1,5 +1,10 @@
+activeRetinaImage = false
+
 spritesheet(spritesheetName, width, height = width, device = 'desktop')
-	image(imagePath(spritesheetName, device), width, height)
+	if activeRetinaImage
+		image(imagePath(spritesheetName, device), width, height)
+	else
+		background-image : url(imagePath(spritesheetName, device))
 	background-repeat no-repeat
 
 spritesheet_desktop(spritesheetName, width, height = width)
@@ -20,7 +25,6 @@ spritesheet-part(width, height = width, x = 0, y = x)
 sprite(width, height = width, col = 0, row = 0)
 	spritesheet-part(width, height, (( col * width )px), (( row * height )px))
 	
-	
 /*---------------------------*/
 
 picto(imageName, width, height = width, device = 'desktop')
@@ -37,3 +41,15 @@ picto_mobile(imageName, width, height = width)
 	picto(imageName, width, height, 'mobile')
 
 /*--------------------------*/
+
+logo(imageName, width, height = width, device = 'desktop')
+	picto(imageName, width, height, device)
+
+logo_desktop(imageName, width, height = width)
+	picto_desktop(imageName, width, height)
+
+logo_tablet(imageName, width, height = width)
+	picto_tablet(imageName, width, height)
+
+logo_mobile(imageName, width, height = width)
+	picto_mobile(imageName, width, height)

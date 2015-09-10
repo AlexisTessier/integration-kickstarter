@@ -11,6 +11,10 @@ var dom = (function() {
 			document.addEventListener('DOMContentLoaded', callback);
 		}
 	};
+
+	dom.select = function (id) {
+		return document.getElementById(id);
+	};
 	
 	return dom;
 }());
