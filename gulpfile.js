@@ -44,8 +44,8 @@ var blockInclude = '\n$1include '+path.join("../../page-block", '$2.jade\n');
 */
 /*---------------------------------*/
 
-var app = require('./app-path');
-var config = require(app.configuration);
+var app = require('./app');
+
 var commandLineOption = require('./command-line-option');
 
 /*===========================================*/
@@ -59,7 +59,7 @@ var browserYetOpen = commandLineOption.noOpen;
 
 gulp.task('connect', function() {
   connect.server({
-	root: app.build,
+	root: app.path.build,
 	livereload: true
   });
 });
@@ -68,7 +68,7 @@ gulp.task('livereload', function() {
 	var currentTimestamp = Date.now();
 
 	if (currentTimestamp - lastReloadTimestamp >= reloadDelay) {
-		gulp.src(app.server)
+		gulp.src(app.path.server)
 		.pipe(plumber())
 		.pipe(connect.reload());
 	}
@@ -90,25 +90,25 @@ gulp.task('open-once', function () {
 /*===========================================*/
 
 gulp.task('pre-jade', function () {
-	mkdirp(app.build);
+	mkdirp(app.path.build);
 });
 
 var jadeFileToBuild = [];
-jadeFileToBuild.push(app.pageJade);
+jadeFileToBuild.push(app.path.pageJade);
 
-jadeBuildDestPath = path.join(app.build, '{basename}{extension}');
+jadeBuildDestPath = path.join(app.path.build, '{basename}{extension}');
 
 //define variables accessible in the jade files
 var jadeGlobalVariables = {
-	utils : require(app.jadeUtils),
+	utils : require(app.path.jadeUtils),
 	commandLineOption : commandLineOption,
 };
 
-var jadePlaceholder = {
-	'component': app.componentJade
-};
+var jadePlaceholder = {};
 
-var jadeLayoutFileList = glob.sync(app.layoutJade);
+jadePlaceholder['component'] = app.path.componentJade;
+
+var jadeLayoutFileList = glob.sync(app.path.layoutJade);
 
 _.forEach(jadeLayoutFileList, function(file) {
 	var name = path.basename(file, '.jade');
@@ -130,11 +130,9 @@ gulp.task('jade', ['pre-jade'], function () {
 });
 
 var jadeFileToWatch = [];
-jadeFileToWatch.push(app.componentJade);
-jadeFileToWatch.push(app.layoutJade);
-jadeFileToWatch.push(app.pageJade);
-
-console.log(jadeFileToWatch);
+jadeFileToWatch.push(app.path.componentJade);
+jadeFileToWatch.push(app.path.layoutJade);
+jadeFileToWatch.push(app.path.pageJade);
 
 gulp.task('watch-jade', function () {
 	watch(jadeFileToWatch, batch(function (events, done) {
@@ -147,20 +145,20 @@ gulp.task('watch-jade', function () {
 /*===========================================*/
 
 gulp.task('pre-stylus', function () {
-	mkdirp(app.stylesheet);
+	mkdirp(app.path.stylesheet);
 });
 
 var stylusFileToBuild = [];
-stylusFileToBuild.push(app.stylusMain);
+stylusFileToBuild.push(app.path.stylusMain);
 
 var stylusFileToWatch = [];
-stylusFileToWatch.push(app.stylusAll);
-stylusFileToWatch.push(app.libStylus);
-stylusFileToWatch.push(app.componentStylus);
-stylusFileToWatch.push(app.layoutStylus);
-stylusFileToWatch.push(app.pageStylus);
+stylusFileToWatch.push(app.path.stylusAll);
+stylusFileToWatch.push(app.path.libStylus);
+stylusFileToWatch.push(app.path.componentStylus);
+stylusFileToWatch.push(app.path.layoutStylus);
+stylusFileToWatch.push(app.path.pageStylus);
 
-var stylusBuildDestPath = path.join(app.stylesheet, '{basename}{extension}');
+var stylusBuildDestPath = path.join(app.path.stylesheet, '{basename}{extension}');
 
 gulp.task('stylus', ['pre-stylus'], function () {
     gulp.src(stylusFileToBuild)
@@ -185,25 +183,25 @@ gulp.task('watch-stylus', function () {
 // /*===========================================*/
 
 gulp.task('pre-script', function () {
-	mkdirp(app.javascript);
+	mkdirp(app.path.javascript);
 });
 
 var scriptFileToBuild = [];
-scriptFileToBuild.push(app.libScript);
-scriptFileToBuild.push(app.componentScript);
-scriptFileToBuild.push(app.layoutScript);
-scriptFileToBuild.push(app.pageScript);
-scriptFileToBuild.push(app.mainScript);
+scriptFileToBuild.push(app.path.libScript);
+scriptFileToBuild.push(app.path.componentScript);
+scriptFileToBuild.push(app.path.layoutScript);
+scriptFileToBuild.push(app.path.pageScript);
+scriptFileToBuild.push(app.path.mainScript);
 
 var scriptFileToWatch = [];
-scriptFileToWatch.push(app.libScript);
-scriptFileToWatch.push(app.componentScript);
-scriptFileToWatch.push(app.layoutScript);
-scriptFileToWatch.push(app.pageScript);
-scriptFileToWatch.push(app.mainScript);
+scriptFileToWatch.push(app.path.libScript);
+scriptFileToWatch.push(app.path.componentScript);
+scriptFileToWatch.push(app.path.layoutScript);
+scriptFileToWatch.push(app.path.pageScript);
+scriptFileToWatch.push(app.path.mainScript);
 
-var scriptBuildDestPath = path.join(app.javascript, '{basename}{extension}');
-var scriptSingleFileTempDestPath = path.join(app.singleFileScript, '{basename}{extension}');
+var scriptBuildDestPath = path.join(app.path.javascript, '{basename}{extension}');
+var scriptSingleFileTempDestPath = path.join(app.path.singleFileScript, '{basename}{extension}');
 
 var scriptAllTaskList = ['script', 'script-vendor'];
 
@@ -212,7 +210,7 @@ if (commandLineOption.scriptSingleFile) {
 }
 
 gulp.task('script-all', scriptAllTaskList, function () {
-	gulp.src(app.fallbackScript)
+	gulp.src(app.path.fallbackScript)
 		.pipe(plumber())
 		.pipe(out(scriptBuildDestPath));
 });
@@ -243,7 +241,7 @@ gulp.task('script', ['pre-script'], function () {
 });
 
 gulp.task('script-vendor', ['pre-script'], function () {
-    var stream = gulp.src(app.vendorScript)
+    var stream = gulp.src(app.path.vendorScript)
         .pipe(browserify({
           insertGlobals : true
         }))
@@ -262,7 +260,7 @@ gulp.task('script-vendor', ['pre-script'], function () {
 });
 
 gulp.task('script-single-file', ['pre-script'], function() {
-	gulp.src(app.singleFileScriptAll)
+	gulp.src(app.path.singleFileScriptAll)
 		.pipe(plumber())
 		.pipe(concat('all.min.js'))
 		.pipe(uglify({
@@ -284,13 +282,13 @@ gulp.task('watch-script', function () {
 // /*===========================================*/
 
 var imageToBuild = [];
-imageToBuild.push(app.imageAll);
-imageToBuild.push(app.libImageAll);
-imageToBuild.push(app.componentImageAll);
-imageToBuild.push(app.layoutImageAll);
-imageToBuild.push(app.pageImageAll);
+imageToBuild.push(app.path.imageAll);
+imageToBuild.push(app.path.libImageAll);
+imageToBuild.push(app.path.componentImageAll);
+imageToBuild.push(app.path.layoutImageAll);
+imageToBuild.push(app.path.pageImageAll);
 
-var imageBuildDestPath = path.join(app.build, 'asset');
+var imageBuildDestPath = path.join(app.path.build, 'asset');
 
 gulp.task('image-min', function () {
 	if (!commandLineOption.noImageMin) {
@@ -309,11 +307,11 @@ gulp.task('image-min', function () {
 // /*==================Fonts====================*/
 // /*===========================================*/
 
-var fontBuildDestPath = path.join(app.build, 'asset');
+var fontBuildDestPath = path.join(app.path.build, 'asset');
 
 var fontList = [];
-_.forEach(config.font.formatList, function(format) {
-	fontList.push(path.join(app.font, '*.'+format));
+_.forEach(app.configuration.font.formatList, function(format) {
+	fontList.push(path.join(app.path.font, '*.'+format));
 });
 
 gulp.task('font', function () {
@@ -336,7 +334,7 @@ gulp.task('watch', ['build', 'watch-jade', 'watch-stylus', 'watch-script']);
 gulp.task('server', ['watch', 'connect', 'open-once']);
 
 gulp.task('server-livereload', ['server'], function () {
-	watch(app.server, batch(function (events, done) {
+	watch(app.path.server, batch(function (events, done) {
 		gulp.start('livereload', done);
 	}))
 });

@@ -1,4 +1,4 @@
-var WheelManager = (function() {
+/*var WheelManager = (function() {
 	'use strict';
 
 	function WheelManager(params) {
@@ -6,8 +6,6 @@ var WheelManager = (function() {
 		if (!(this instanceof WheelManager)) {
 			return new WheelManager(params);
 		}
-
-		WheelManager.mousewheel.install();
 
 		this.timeManager = params.timeManager;
 		this.target = $(params.target);
@@ -92,18 +90,8 @@ var WheelManager = (function() {
 		this.wheel.move = 0;
 	};
 
-	WheelManager.mousewheel = {
-		installed : false,
-		install : function () {
-			if (!WheelManager.mousewheel.installed) {
-				installMousewheel();
-			}
-			WheelManager.mousewheel.installed = true;
-		}
-	};
-
 	return WheelManager;
-}());
+}());*/
 
 /*
 if (wheel.debounce(100).toDown) {

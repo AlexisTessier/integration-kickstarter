@@ -1,0 +1,48 @@
+/*==============Font openSans===============*/
+
+font_openSans(size, transform = false, weight = 400, style = normal)
+	font_base("Open Sans", size, transform)
+	font-weight weight
+	font-style style
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+font_openSansRegular(size, transform = false)
+	font_openSans(size, transform)
+
+font_openSansItalic(size, transform = false)
+	font_openSans(size, transform, 400, italic)
+
+font_openSansSemiBold(size, transform = false)
+	font_openSans(size, transform, 600)
+
+font_openSansBold(size, transform = false)
+	font_openSans(size, transform, 700)
+	
+font_openSansLight(size, transform = false)
+	font_openSans(size, transform, 300)
+
+font_openSansLightItalic(size, transform = false)
+	font_openSans(size, transform, 300, italic)
+	
+font_openSansSemiBoldItalic(size, transform = false)
+	font_openSans(size, transform, 600, italic)
+
+/*==============Font others===============*/
+
+font_times(size, transform = false, weight = normal, style = normal)
+	font_base "Times New Roman" size transform
+	font-weight weight
+	font-style style
+	
+font_timesRegular(size, transform = false)
+	font_times(size, transform)
+
+font_timesBold(size, transform = false)
+	font_times(size, transform, bold)
+
+font_timesItalic(size, transform = false)
+	font_times(size, transform, normal, italic)
+
+font_timesBoldItalic(size, transform = false)
+	font_times(size, transform, bold, italic)

@@ -2,76 +2,76 @@
 
 var path = require('path');
 
-var app = {};
+var appPath = {};
 
-app.configuration = path.join(__dirname, 'configuration');
+appPath.configuration = path.join(__dirname, 'configuration');
 
-app.source = path.join(__dirname, 'sources');
+appPath.source = path.join(__dirname, 'sources');
 
-app.script = path.join(app.source, 'script');
-app.stylus = path.join(app.source, 'stylus');
-app.jade = path.join(app.source, 'jade');
+appPath.script = path.join(appPath.source, 'script');
+appPath.stylus = path.join(appPath.source, 'stylus');
+appPath.jade = path.join(appPath.source, 'jade');
 
-app.mainScript = path.join(app.script, 'main.js');
-app.fallbackScript = path.join(app.script, 'fallback.min.js');
-app.vendorScript = path.join(app.script, 'vendor.js');
-app.singleFileScript = path.join(app.script, 'single-file');
-app.singleFileScriptAll = path.join(app.singleFileScript, '*.js');
+appPath.mainScript = path.join(appPath.script, 'main.js');
+appPath.fallbackScript = path.join(appPath.script, 'fallback.min.js');
+appPath.vendorScript = path.join(appPath.script, 'vendor.js');
+appPath.singleFileScript = path.join(appPath.script, 'single-file');
+appPath.singleFileScriptAll = path.join(appPath.singleFileScript, '*.js');
 
-app.stylusMain = path.join(app.stylus, 'main.styl');
-app.stylusAll = path.join(app.stylus, '*.styl');
+appPath.stylusMain = path.join(appPath.stylus, 'main.styl');
+appPath.stylusAll = path.join(appPath.stylus, '*.styl');
 
-app.jadeUtils = path.join(app.jade, 'utils.js');
+appPath.jadeUtils = path.join(appPath.jade, 'utils.js');
 
-app.asset = path.join(app.source, 'asset');
-app.image = path.join(app.asset, 'image');
-app.imageAll = path.join(app.image, '**/*.*');
-app.font = path.join(app.asset, 'font');
+appPath.asset = path.join(appPath.source, 'asset');
+appPath.image = path.join(appPath.asset, 'image');
+appPath.imageAll = path.join(appPath.image, '**/*.*');
+appPath.font = path.join(appPath.asset, 'font');
 
-app.lib = path.join(app.source, 'lib');
-app.libAll = path.join(app.lib, '*');
-app.libScript = path.join(app.libAll, '*.js');
-app.libStylus = path.join(app.libAll, '*.styl');
-app.libTask = path.join(app.libAll, 'task');
-app.libTaskAll = path.join(app.libTask, '*.js');
-app.libAsset = path.join(app.libAll, 'asset');
-app.libImage = path.join(app.libAsset, 'image');
-app.libImageAll = path.join(app.libImage, '**/*.*');
+appPath.lib = path.join(appPath.source, 'lib');
+appPath.libAll = path.join(appPath.lib, '*');
+appPath.libScript = path.join(appPath.libAll, '*.js');
+appPath.libStylus = path.join(appPath.libAll, '*.styl');
+appPath.libTask = path.join(appPath.libAll, 'task');
+appPath.libTaskAll = path.join(appPath.libTask, '*.js');
+appPath.libAsset = path.join(appPath.libAll, 'asset');
+appPath.libImage = path.join(appPath.libAsset, 'image');
+appPath.libImageAll = path.join(appPath.libImage, '**/*.*');
 
-app.component = path.join(app.source, 'component');
-app.componentAll = path.join(app.component, '*');
-app.componentJade = path.join(app.componentAll, '*.jade');
-app.componentStylus = path.join(app.componentAll, '*.styl');
-app.componentScript = path.join(app.componentAll, '*.js');
-app.componentAsset = path.join(app.componentAll, 'asset');
-app.componentImage = path.join(app.componentAsset, 'image');
-app.componentImageAll = path.join(app.componentImage, '**/*.*');
+appPath.component = path.join(appPath.source, 'component');
+appPath.componentAll = path.join(appPath.component, '*');
+appPath.componentJade = path.join(appPath.componentAll, '*.jade');
+appPath.componentStylus = path.join(appPath.componentAll, '*.styl');
+appPath.componentScript = path.join(appPath.componentAll, '*.js');
+appPath.componentAsset = path.join(appPath.componentAll, 'asset');
+appPath.componentImage = path.join(appPath.componentAsset, 'image');
+appPath.componentImageAll = path.join(appPath.componentImage, '**/*.*');
 
-app.layout = path.join(app.source, 'layout');
-app.layoutAll = path.join(app.layout, '*');
-app.layoutJade = path.join(app.layoutAll, '*.jade');
-app.layoutStylus = path.join(app.layoutAll, '*.styl');
-app.layoutScript = path.join(app.layoutAll, '*.js');
-app.layoutAsset = path.join(app.layoutAll, 'asset');
-app.layoutImage = path.join(app.layoutAsset, 'image');
-app.layoutImageAll = path.join(app.layoutImage, '**/*.*');
+appPath.layout = path.join(appPath.source, 'layout');
+appPath.layoutAll = path.join(appPath.layout, '*');
+appPath.layoutJade = path.join(appPath.layoutAll, '*.jade');
+appPath.layoutStylus = path.join(appPath.layoutAll, '*.styl');
+appPath.layoutScript = path.join(appPath.layoutAll, '*.js');
+appPath.layoutAsset = path.join(appPath.layoutAll, 'asset');
+appPath.layoutImage = path.join(appPath.layoutAsset, 'image');
+appPath.layoutImageAll = path.join(appPath.layoutImage, '**/*.*');
 
-app.page = path.join(app.source, 'page');
-app.pageAll = path.join(app.page, '*');
-app.pageJade = path.join(app.pageAll, '*.jade');
-app.pageStylus = path.join(app.pageAll, '*.styl');
-app.pageScript = path.join(app.pageAll, '*.js');
-app.pageAsset = path.join(app.pageAll, 'asset');
-app.pageImage = path.join(app.pageAsset, 'image');
-app.pageImageAll = path.join(app.pageImage, '**/*.*');
+appPath.page = path.join(appPath.source, 'page');
+appPath.pageAll = path.join(appPath.page, '*');
+appPath.pageJade = path.join(appPath.pageAll, '*.jade');
+appPath.pageStylus = path.join(appPath.pageAll, '*.styl');
+appPath.pageScript = path.join(appPath.pageAll, '*.js');
+appPath.pageAsset = path.join(appPath.pageAll, 'asset');
+appPath.pageImage = path.join(appPath.pageAsset, 'image');
+appPath.pageImageAll = path.join(appPath.pageImage, '**/*.*');
 
 /*----------------------------------------------------*/
 
-app.build = path.join(__dirname, 'build');
+appPath.build = path.join(__dirname, 'build');
 
-app.server = path.join(app.build, '**');
+appPath.server = path.join(appPath.build, '**');
 
-app.stylesheet = path.join(app.build, 'stylesheet');
-app.javascript = path.join(app.build, 'javascript');
+appPath.stylesheet = path.join(appPath.build, 'stylesheet');
+appPath.javascript = path.join(appPath.build, 'javascript');
 
-module.exports = app;
+module.exports = appPath;

@@ -11,6 +11,22 @@ html(class="no-js")
 		block scripts
 			script(type="text/javascript" src='./javascript/fallback.min.js')
 
+			script(type="text/javascript").
+				WebFontConfig = {
+					/*google: { families: [ 'Open+Sans:300,800italic,800,700italic,700,600,300italic,400,400italic,600italic:latin' ] }*/
+					google: { families: [ 'Open+Sans:400,400italic,600,300,300italic,600italic,700:latin' ] }
+				};
+
+				(function() {
+					var wf = document.createElement('script');
+					wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+						'://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+					wf.type = 'text/javascript';
+					wf.async = 'true';
+					var s = document.getElementsByTagName('script')[0];
+					s.parentNode.insertBefore(wf, s);
+				})();
+
 			if commandLineOption.scriptSingleFile
 				script(type="text/javascript").
 					window.javascriptImport = ["./javascript/all.min.js"];
