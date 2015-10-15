@@ -47,6 +47,18 @@ appPath.componentAsset = path.join(appPath.componentAll, 'asset');
 appPath.componentImage = path.join(appPath.componentAsset, 'image');
 appPath.componentImageAll = path.join(appPath.componentImage, '**/*.*');
 
+appPath.entity = path.join(appPath.source, 'entity');
+appPath.entityAll = path.join(appPath.entity, '*');
+appPath.entityJade = path.join(appPath.entityAll, '*.jade');
+appPath.entityOverrideJade = path.join(appPath.entityAll, '*/*.jade');
+appPath.entityStylus = path.join(appPath.entityAll, '*.styl');
+appPath.entityOverrideStylus = path.join(appPath.entityAll, '*/*.styl');
+appPath.entityScript = path.join(appPath.entityAll, '*.js');
+appPath.entityOverrideScript = path.join(appPath.entityAll, '*/*.js');
+appPath.entityAsset = path.join(appPath.entityAll, 'asset');
+appPath.entityImage = path.join(appPath.entityAsset, 'image');
+appPath.entityImageAll = path.join(appPath.entityImage, '**/*.*');
+
 appPath.layout = path.join(appPath.source, 'layout');
 appPath.layoutAll = path.join(appPath.layout, '*');
 appPath.layoutJade = path.join(appPath.layoutAll, '*.jade');

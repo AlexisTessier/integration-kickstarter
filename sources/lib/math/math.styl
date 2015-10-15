@@ -1,0 +1,11 @@
+math_rectWidthAfterRotate(width, height, angle)
+	tempOne = cos( angle )
+	tempValue = 90 - angle
+	tempTwo = cos( tempValue)
+	return (width * tempOne) + (height * tempTwo)
+
+math_rectHeightAfterRotate(width, height, angle)
+	tempOne = sin( angle )
+	tempValue = 90 - angle
+	tempTwo = sin( tempValue)
+	return (width * tempOne) + (height * tempTwo)

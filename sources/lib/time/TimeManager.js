@@ -14,7 +14,7 @@ var TimeManager = (function() {
 			total : 0
 		}
 
-		this.frameEventList = [];
+		this.timeUpdateListenerList = [];
 
 		this.timeOutList = [];
 	}
@@ -42,8 +42,8 @@ var TimeManager = (function() {
 		this.updateTime();
 		this.updateTimeOutList();
 
-		_.each(this.frameEventList, function (frameEvent) {
-			frameEvent(self.time);
+		_.each(this.timeUpdateListenerList, function (listener) {
+			listener.timeUpdate(self.time);
 		});
 	};
 
@@ -53,19 +53,40 @@ var TimeManager = (function() {
 
 		_.each(this.timeOutList, function (timeOut) {
 			timeOut.time += self.getDelta();
+
+			if (timeOut.time < timeOut.duration || timeOut.repeat) {
+				newTimeOutList.push(timeOut);
+			}
+
 			if (timeOut.time >= timeOut.duration) {
 				timeOut.block();
-			}
-			else{
-				newTimeOutList.push(timeOut);
+				if (timeOut.repeat) {
+					timeOut.time = 0;
+				}
 			}
 		});
 
 		this.timeOutList = newTimeOutList;
 	};
 
-	TimeManager.prototype.addFrameEvent = function(block) {
-		this.frameEventList.push(block);
+	TimeManager.prototype.addTimeLoop = function(duration, block) {
+		var timeLoop = {
+			time : 0,
+			duration : duration,
+			block : block,
+			repeat : true
+		};
+
+		this.timeOutList.push(timeLoop);
+
+		return timeLoop;
+	};
+
+	TimeManager.prototype.addTimeUpdateListener = function(listener) {
+		if (!_.isFunction(listener.timeUpdate)) {
+			throw new Error('A time update listener for a TimeManager must have a method timeUpdate')
+		};
+		this.timeUpdateListenerList.push(listener);
 	};
 
 	TimeManager.prototype.getDelta = function() {
@@ -93,11 +114,16 @@ var TimeManager = (function() {
 	};
 
 	TimeManager.prototype.addTimeout = function(duration, block) {
-		this.timeOutList.push({
+		var timeOut = {
 			time : 0,
 			duration : duration,
-			block : block
-		});
+			block : block,
+			repeat : false
+		};
+
+		this.timeOutList.push(timeOut);
+
+		return timeOut;
 	};
 
 	return TimeManager;

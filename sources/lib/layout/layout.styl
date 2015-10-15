@@ -1,7 +1,5 @@
 layout_sectionWidth = 1800px
 layout_containerWidth = 1100px
-layout_tablet_containerWidth = (1376px / 2)
-layout_mobile_containerWidth = 100%
 
 layout_centeredBlock(width = layout_containerWidth)
 	display block
@@ -9,15 +7,10 @@ layout_centeredBlock(width = layout_containerWidth)
 	max-width 90%
 	width width
 	
-layout_container(device = 'desktop')
-	if device == 'desktop'
-		layout_centeredBlock layout_containerWidth
-	else if device == 'tablet'
-		layout_centeredBlock layout_tablet_containerWidth
-	else if device == 'mobile'
-		layout_centeredBlock layout_mobile_containerWidth
+layout_container()
+	layout_centeredBlock layout_containerWidth
 
-layout_section(device = 'desktop')
+layout_section()
 	display block
 	margin auto
 	max-width 100%
@@ -47,6 +40,7 @@ layout_grid(selector, blockSelector, baseWidth, numberOfColumns, gutter, rowGutt
 
 			&:nth-child({numberOfColumns}n+1)
 				{gutterProperty}-left 0
+				clear both
 			
 			for index in (1..(numberOfColumns))
 				&:nth-child({numberOfColumns}n+{index})

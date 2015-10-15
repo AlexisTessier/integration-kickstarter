@@ -21,15 +21,13 @@ var FrameManager = (function() {
 			height : this.frame.height()
 		};
 
-		this.resizeEventList = [];
+		this.resizeListenerList = [];
 	}
 
 	FrameManager.prototype.init = function() {
-		var self = this;
-
-		this.timeManager.addFrameEvent(function () {
-			self.update();
-		});
+		if (this.timeManager) {
+			this.timeManager.addTimeUpdateListener(this);
+		};
 
 		this.update();
 
@@ -53,24 +51,29 @@ var FrameManager = (function() {
 		}
 	};
 
+	FrameManager.prototype.timeUpdate = FrameManager.prototype.update;
+
 	FrameManager.prototype.resizeEvent = function(documentResize) {
 		var self = this;
 
-		var listEvent = this.resizeEventList;
-
-		_.each(listEvent, function (resizeEvent) {
-			resizeEvent(self.resize);
+		_.each(this.resizeListenerList, function (resizeListener) {
+			resizeListener.resize(self.getRect());
 		});
 	};
 
-	FrameManager.prototype.addResizeEvent = function(block) {
-		var self = this;
+	FrameManager.prototype.addResizeListener = function(listener) {
+		if (!_.isFunction(listener.resize)) {
+			throw new Error('A resize listener for a FrameManager must have a method resize')
+		};
 		
-		this.resizeEventList.push(block);
+		this.resizeListenerList.push(listener);
+	};
 
-		return {andCall : function () {
-			block(self.resize);
-		}};
+	FrameManager.prototype.getRect = function() {
+		return {
+			resize : this.resize,
+			size : this.size
+		};
 	};
 
 	FrameManager.prototype.setHeight = function(newHeight) {

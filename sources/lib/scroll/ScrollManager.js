@@ -9,7 +9,7 @@ var ScrollManager = (function() {
 
 		this.document = $(params.document);
 		this.timeManager = params.timeManager;
-		this.frame = params.frame;
+		this.frameManager = params.frameManager;
 
 		var self = this;
 
@@ -27,21 +27,18 @@ var ScrollManager = (function() {
 			}
 		};
 
-		this.scrollEventList = [];
+		this.scrollChangeListenerList = [];
 	}
 
 	ScrollManager.prototype.init = function() {
-		var self = this;
-		this.timeManager.addFrameEvent(function (time) {
-			self.update(time);
-		});
+		this.timeManager.addTimeUpdateListener(this);
 
-		this.update(this.timeManager.time);
+		this.timeUpdate(this.timeManager.time);
 
 		return this;
 	};
 
-	ScrollManager.prototype.update = function(time) {
+	ScrollManager.prototype.timeUpdate = function(time) {
 		var newScrollPosition = this.document.scrollTop();
 
 		this.scroll.toDown = (newScrollPosition > this.scroll.position);
@@ -53,7 +50,7 @@ var ScrollManager = (function() {
 		this.scroll.toDown ? this.scroll.timeSinceLastChangeToDown = 0 : this.scroll.timeSinceLastChangeToDown += time.delta;
 
 
-		if(this.frame.resize.both){
+		if(this.frameManager.resize.both){
 			this.scroll.change = true;
 		}
 
@@ -67,13 +64,17 @@ var ScrollManager = (function() {
 	ScrollManager.prototype.scrollEvent = function() {
 		var self = this;
 
-		_.each(this.scrollEventList, function (scrollEvent) {
-			scrollEvent(self.scroll);
+		_.each(this.scrollChangeListenerList, function (listener) {
+			listener.scrollChange(self.scroll);
 		});
 	};
 
-	ScrollManager.prototype.addScrollEvent = function(block) {
-		this.scrollEventList.push(block);
+	ScrollManager.prototype.addScrollChangeListener = function(listener) {
+		if (!_.isFunction(listener.scrollChange)) {
+			throw new Error('A scroll change for a ScrollManager must have a method scrollChange')
+		};
+		
+		this.scrollChangeListenerList.push(listener);
 	};
 
 	return ScrollManager;

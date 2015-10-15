@@ -1,18 +1,63 @@
-device_restrained-height()
-	@media screen and (max-height: 750px)
+device_deviceList = {}
+
+device_addDevice(name, minWidth = 0, maxWidth = 0, minHeight = 0, maxHeight = 0, media = "screen")
+	device_deviceList[name] = {
+		minWidth : minWidth,
+		maxWidth : maxWidth,
+		minHeight : minHeight,
+		maxHeight : maxHeight,
+		media : media,
+		name : name
+	}
+	
+	.device_DeviceManager_deviceListFrame
+		contentValue = "";
+		for deviceName in device_deviceList
+			contentValue += deviceName+","
+		
+		content contentValue
+	
+	.device_DeviceManager_currentDeviceCheckingFrame-{name}
+		content "unactive"
+		
+		+device(name)
+			content "active"
+
+device_one(deviceName)
+	currentDevice = device_deviceList[deviceName]
+	
+	mediaQuery = currentDevice.media;
+	
+	if currentDevice.minWidth > 0
+		mediaQuery += " and (min-width: "+currentDevice.minWidth+")"
+	
+	if currentDevice.maxWidth > 0
+		mediaQuery += " and (max-width: "+currentDevice.maxWidth+")"
+	
+	if currentDevice.minHeight > 0
+		mediaQuery += " and (min-height: "+currentDevice.minHeight+")"
+	
+	if currentDevice.maxHeight > 0
+		mediaQuery += " and (max-height: "+currentDevice.maxHeight+")"
+
+	@media mediaQuery
 		{block}
 
+device(deviceNameList)
+	for deviceName in deviceNameList
+		+device_one(deviceName)
+			{block}
 
 /*-------------------------*/
 
-.tablet
-	.on-desktop, .on-mobile
-		display none
+.device_DeviceManager_deviceListFrame
+	display none
 
-.desktop
-	.on-tablet, .on-mobile
-		display none
-	
-.mobile
-	.on-desktop, .on-tablet
-		display none
+.device_DeviceManager_currentDeviceCheckingFrame
+	display none
+
+/*-------------------------*/
+
+device_addDevice('desktop', minWidth:1025px)
+device_addDevice('tablet', minWidth:767px, maxWidth:1024px)
+device_addDevice('mobile', maxWidth:766px)

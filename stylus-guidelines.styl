@@ -1,0 +1,87 @@
+/*---------*/
+/*---css---*/
+/*---------*/
+
+//component
+.ComponentName
+.ComponentName-descendant-name
+
+//entity
+.EntityName_view_name
+.EntityName_view_name-descendant-name
+
+.EntityName-override-name_view_name
+.EntityName-override-name_view_name-descendant-name
+
+//state or modifier
+.state-name
+
+/*------------*/
+/*---stylus---*/
+/*------------*/
+
+//component constructor
+libName_component_ComponentName()
+component_ComponentName(selector = "ComponentName",
+	param = 8px
+)
+	.{selector}
+		//calculs internes
+		component_name_computed_param = param * 2
+	
+		//définition des styles
+		property param
+		
+		&.state-name
+			property component_name_computed_param
+	
+		&-descendant-name
+			property value
+			
+		{block}
+
+//component constructor usage
++component_ComponentName(
+	param:18px
+)
+	color red
+
+//entity definition
+.EntityName_view_name
+.EntityName-override-name_view_name
+	//parameters definition
+	param = 8px
+	
+	//calculs internes
+	computedParam = param * 2
+	
+	property param
+	
+	&.state-name
+		property computedParam
+
+	&-descendant-name
+		property value
+
+//abstract class
+//no complex nesting if possible
+_class_name_param = 8px
+_class-name
+	property _class_name_param
+_libName_class-name
+
+//function
+//return a value from parameters, but don't add any style
+functionName(){}
+libName_functionName(){}
+
+//property
+//add style without nesting and with at least one parameter needed
+property-name()
+libName_property-name()
+
+//object function
+//add style with possible nesting and with optional parameters
+O--objectName()
+	property value
+O--libName_objectName()

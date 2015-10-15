@@ -107,6 +107,8 @@ var jadeGlobalVariables = {
 var jadePlaceholder = {};
 
 jadePlaceholder['component'] = app.path.componentJade;
+jadePlaceholder['entity'] = app.path.entityJade;
+jadePlaceholder['entity-override'] = app.path.entityOverrideJade;
 
 var jadeLayoutFileList = glob.sync(app.path.layoutJade);
 
@@ -119,6 +121,8 @@ gulp.task('jade', ['pre-jade'], function () {
 	gulp.src(jadeFileToBuild)
 		.pipe(plumber())
 		.pipe(header('include {component}\n'))
+		.pipe(header('include {entity}\n'))
+		.pipe(header('include {entity-override}\n'))
 		.pipe(jadeGlobbing({
 			placeholder: jadePlaceholder
 		}))
@@ -131,6 +135,8 @@ gulp.task('jade', ['pre-jade'], function () {
 
 var jadeFileToWatch = [];
 jadeFileToWatch.push(app.path.componentJade);
+jadeFileToWatch.push(app.path.entityJade);
+jadeFileToWatch.push(app.path.entityOverrideJade);
 jadeFileToWatch.push(app.path.layoutJade);
 jadeFileToWatch.push(app.path.pageJade);
 
@@ -155,6 +161,8 @@ var stylusFileToWatch = [];
 stylusFileToWatch.push(app.path.stylusAll);
 stylusFileToWatch.push(app.path.libStylus);
 stylusFileToWatch.push(app.path.componentStylus);
+stylusFileToWatch.push(app.path.entityStylus);
+stylusFileToWatch.push(app.path.entityOverrideStylus);
 stylusFileToWatch.push(app.path.layoutStylus);
 stylusFileToWatch.push(app.path.pageStylus);
 
@@ -189,6 +197,8 @@ gulp.task('pre-script', function () {
 var scriptFileToBuild = [];
 scriptFileToBuild.push(app.path.libScript);
 scriptFileToBuild.push(app.path.componentScript);
+scriptFileToBuild.push(app.path.entityScript);
+scriptFileToBuild.push(app.path.entityOverrideScript);
 scriptFileToBuild.push(app.path.layoutScript);
 scriptFileToBuild.push(app.path.pageScript);
 scriptFileToBuild.push(app.path.mainScript);
@@ -196,6 +206,8 @@ scriptFileToBuild.push(app.path.mainScript);
 var scriptFileToWatch = [];
 scriptFileToWatch.push(app.path.libScript);
 scriptFileToWatch.push(app.path.componentScript);
+scriptFileToWatch.push(app.path.entityScript);
+scriptFileToWatch.push(app.path.entityOverrideScript);
 scriptFileToWatch.push(app.path.layoutScript);
 scriptFileToWatch.push(app.path.pageScript);
 scriptFileToWatch.push(app.path.mainScript);

@@ -1,4 +1,4 @@
-/*var DeviceManager = (function() {
+var DeviceManager = (function() {
 	'use strict';
 
 	function DeviceManager(params) {
@@ -6,259 +6,99 @@
 		if (!(this instanceof DeviceManager)) {
 			return new DeviceManager(params);
 		}
+		
+		this.frameManager = params.frameManager;
 
-		this.frame = params.$frame;
-		this.timeManager = params.timeManager;
+		this.changeListenerList = [];
 
-		this.resize = {
-			both : false,
-			width : false,
-			height : false,
-			every : false
-		};
-
-		this.size = {
-			width : this.frame.width(),
-			height : this.frame.height()
-		};
-
-		this.document = $(document);
-
-		this.documentSize = {
-			height : this.document.height(),
-			width : this.document.width()
-		};
-
-		this.deviceList = [];
-
-		this.indexedDevice = {};
-		this.indexedDeviceList = {};
-		this.resizeEventList = [];
-		this.resizeEventListWithDocument = [];
-
-		this.deviceChanged = false;
-
-		this.firstDeviceSetted = false;
+		this.deviceDefinitionMarker = "";
 
 		this.init();
 	}
 
 	DeviceManager.prototype.init = function() {
-		var self = this;
-		this.timeManager.addFrameEvent(function () {
-			self.update();
-		});
+		this.deviceListFrame = $('<div class="device_DeviceManager_deviceListFrame"></div>');
+		this.currentDeviceCheckingFrame = $('<div class="device_DeviceManager_currentDeviceCheckingFrame"></div>');
+		
+		var body = $('body');
+		body.append(this.deviceListFrame);
+		body.append(this.currentDeviceCheckingFrame);
+		this.currentDeviceCheckingFrameInnerFrameList = {};
 
 		this.update();
-		this.checkCurrentDevice();
+
+		this.frameManager.addResizeListener(this);
+
+		return this;
 	};
 
-	DeviceManager.prototype.changed = function() {
-		return this.deviceChanged;
+	DeviceManager.prototype.changeEvent = function() {
+		var listenerList = this.changeListenerList;
+		for(var i=0,imax=listenerList.length;i<imax;i++){
+			listenerList[i].deviceChange(this);
+		}
 	};
 
-	DeviceManager.prototype.getWidth = function() {
-		return this.frame.width();
+	DeviceManager.prototype.addChangeListener = function(listener) {
+		if (!_.isFunction(listener.deviceChange)) {
+			throw new Error('A change listener for a DeviceManager must have a method deviceChange');
+		};
+		
+		this.changeListenerList.push(listener);
 	};
 
-	DeviceManager.prototype.getHeight = function() {
-		return this.frame.height();
-	};
+	DeviceManager.prototype.resize = function(){
+		this.update();
+	}
 
 	DeviceManager.prototype.update = function() {
-		var newWidth = this.getWidth(),
-			newHeight = this.getHeight();
+		this.deviceList = this.getDeviceList();
+		this.currentDeviceList = this.getCurrentDeviceList();
 
-		this.resize.width = (newWidth != this.size.width);
-		this.resize.height = (newHeight != this.size.height);
-		this.resize.both = (this.resize.width && this.resize.height);
-		this.resize.one = (this.resize.width || this.resize.height);
+		for(var i=0, imax = this.deviceList.length;i<imax;i++){
+			var device = this.deviceList[i];
+			if (!this.currentDeviceCheckingFrameInnerFrameList[device]) {
+				this.currentDeviceCheckingFrame.append(
+					this.currentDeviceCheckingFrameInnerFrameList[device] = $('<div class="device_DeviceManager_currentDeviceCheckingFrame-'+device+'"></div>')
+				);
+			}
+			
+		}
 
-		this.size.width = newWidth;
-		this.size.height = newHeight;
+		var deviceDefinitionMarker = "";
+		for(var j=0, jmax=this.currentDeviceList.length;j<jmax;j++){
+			deviceDefinitionMarker += "/"+this.currentDeviceList[j];
+		}
 
-		var newDocumentWidth = this.document.width();
-		var newDocumentHeight = this.document.height();
+		if (deviceDefinitionMarker !== this.deviceDefinitionMarker) {
+			this.changeEvent();
+			this.deviceDefinitionMarker = deviceDefinitionMarker;
+		};
+	};
 
-		var documentResize = (newDocumentHeight !== this.documentSize.height || newDocumentWidth !== this.documentSize.width);
-
-		this.documentSize.height = newDocumentHeight;
-		this.documentSize.width = newDocumentWidth;
-
-		if (this.resize.one || !this.firstDeviceSetted) {
-			this.checkCurrentDevice();
-			this.resizeEvent();
-
-			if (!this.firstDeviceSetted) {
-				this.firstDeviceSetted = true;
+	DeviceManager.prototype.getCurrentDeviceList = function() {
+		var currentDeviceList = [];
+		for(var deviceName in this.currentDeviceCheckingFrameInnerFrameList){
+			var deviceInnerFrame = this.currentDeviceCheckingFrameInnerFrameList[deviceName];
+			var deviceIsActive = (deviceInnerFrame.first().css('content').replace('"', "").replace('"', "") === "active");
+			if (deviceIsActive) {
+				currentDeviceList.push(deviceName);
 			}
 		}
-		else if(documentResize) {
-			this.resizeEvent(documentResize);
-		}
+		return currentDeviceList;
 	};
 
-	DeviceManager.prototype.checkCurrentDevice = function() {
-		var self = this;
+	DeviceManager.prototype.getDeviceList = function() {
+		var deviceList = this.deviceListFrame.css('content').replace('"', "").replace('"', "").split(',');
 
-		var deviceChanged = false;
+		deviceList.pop();
 
-
-		_.each(this.deviceList, function (device) {
-			var width = self.size.width;
-			var height = self.size.height;
-			var oldState = self.is(device.name);
-			self.unsetDevice(device.name);
-
-			if (width >= device.minWidth && width <= device.maxWidth && height >= device.minHeight && height <= device.maxHeight) {
-				self.setDevice(device.name);
-			}
-			var newState = self.is(device.name);
-
-			deviceChanged = deviceChanged ? true : oldState !== newState;
-		});
-
-		this.deviceChanged = deviceChanged;
-	};
-
-	DeviceManager.prototype.addDevice = function(name, device) {
-		var deviceObject = _.cloneDeep(device);
-		deviceObject.name = name;
-
-		this.indexedDeviceList[name] = deviceObject;
-		this.deviceList.push(deviceObject);
-
-		this.deviceList = _.sortBy(this.deviceList, 'priority');
-
-		this.update();
-		this.checkCurrentDevice();
-	};
-
-	DeviceManager.prototype.getDevice = function(name) {
-		return typeof name === "string" ? this.indexedDeviceList[name] : this.indexedDeviceList;
-	};
-
-	DeviceManager.prototype.unsetDevice = function(deviceName) {
-		DeviceManager.dependency.mainHTMLElement.removeClass(deviceName);
-		this.indexedDevice[deviceName] = false;
-	};
-
-	DeviceManager.prototype.setDevice = function(deviceName) {
-		DeviceManager.dependency.mainHTMLElement.addClass(deviceName);
-		this.indexedDevice[deviceName] = true;
+		return deviceList;
 	};
 
 	DeviceManager.prototype.is = function(deviceName) {
-		return !!(this.indexedDevice[deviceName]);
-	};
-
-	DeviceManager.prototype.useDefaultDeviceList = function() {
-		var self = this;
-		_.each(DeviceManager.dependency.defaultDeviceList, function (device, name) {
-			self.addDevice(name, device);
-		});
-	};
-
-	DeviceManager.prototype.resizeEvent = function(documentResize) {
-		var self = this;
-
-		var listEvent = documentResize ? this.resizeEventListWithDocument : this.resizeEventList;
-
-		_.each(listEvent, function (resizeEvent) {
-			resizeEvent(self.resize);
-		});
-	};
-
-	DeviceManager.prototype.addResizeEvent = function(block, launchAtDocumentResizeToo) {
-		if (launchAtDocumentResizeToo) {
-			this.resizeEventListWithDocument.push(block);
-		}
-		
-		this.resizeEventList.push(block);
-	};
-
-	DeviceManager.dependency = {
-		mainHTMLElement : $('html'),
-		defaultDeviceList : {
-			desktop : {
-				maxWidth : Infinity,
-				minWidth : 1025,
-				priority : 20,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-			tablet : {
-				maxWidth : 1024,
-				minWidth : 656,
-				priority : 10,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-			mobile : {
-				maxWidth : 655,
-				minWidth : 0,
-				priority : 5,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			"height-compressed" : {
-				maxWidth : Infinity,
-				minWidth : 0,
-				priority : 4,
-				maxHeight : 770,
-				minHeight : 581
-			},
-
-			"tablet-width-compressed" : {
-				maxWidth : 760,
-				minWidth : 581,
-				priority : 3,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			"tablet-width-medium-compressed" : {
-				maxWidth : 780,
-				minWidth : 581,
-				priority : 3,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			'desktop-width-compressed' : {
-				maxWidth : 1200,
-				minWidth : 1025,
-				priority : 2,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			'desktop-width-compressed-medium' : {
-				maxWidth : 1600,
-				minWidth : 1025,
-				priority : 2,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			'desktop-width-medium' : {
-				maxWidth : 1800,
-				minWidth : 1201,
-				priority : 2,
-				maxHeight : Infinity,
-				minHeight : 0
-			},
-
-			"height-ultra-compressed" : {
-				maxWidth : Infinity,
-				minWidth : 0,
-				priority : 0,
-				maxHeight : 580,
-				minHeight : 0
-			}
-		}
+		return _.contains(this.currentDeviceList, deviceName);
 	};
 
 	return DeviceManager;
-}());*/
+}());

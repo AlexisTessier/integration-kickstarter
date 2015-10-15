@@ -1,20 +1,32 @@
-activeRetinaImage = false
+_image_options_default_device_list = 'desktop' 'tablet' 'mobile'
 
-spritesheet(spritesheetName, width, height = width, device = 'desktop')
-	if activeRetinaImage
-		image(imagePath(spritesheetName, device), width, height)
-	else
-		background-image : url(imagePath(spritesheetName, device))
+image_options = {
+	retinaImage : true,
+	defaultDevice : 'desktop'
+}
+
+spritesheet(
+	spritesheetName,
+	width,
+	height = width,
+	deviceList = null,
+	retinaImage = image_options.retinaImage,
+	defaultDevice = image_options.defaultDevice
+)
 	background-repeat no-repeat
-
-spritesheet_desktop(spritesheetName, width, height = width)
-	spritesheet(spritesheetName, width, height, 'desktop')
 	
-spritesheet_tablet(spritesheetName, width, height = width)
-	spritesheet(spritesheetName, width, height, 'tablet')
+	if retinaImage
+		image(imagePath(spritesheetName, defaultDevice), width, height)
+	else
+		background-image : url(imagePath(spritesheetName, defaultDevice))
 	
-spritesheet_mobile(spritesheetName, width, height = width)
-	spritesheet(spritesheetName, width, height, 'mobile')
+	if deviceList
+		for deviceName, deviceSize in deviceList
+			+device(deviceName)
+				if retinaImage
+					image(imagePath(spritesheetName, deviceName), deviceSize.width, deviceSize.height)
+				else
+					background-image : url(imagePath(spritesheetName, deviceName))
 
 /*---------------------------*/
 
@@ -27,29 +39,16 @@ sprite(width, height = width, col = 0, row = 0)
 	
 /*---------------------------*/
 
-picto(imageName, width, height = width, device = 'desktop')
-	spritesheet(imageName, width, height, device)
+picto(imageName, width, height = width, deviceList = null, retinaImage = image_options.retinaImage, defaultDevice = image_options.defaultDevice)
+	spritesheet(imageName, width, height, deviceList, retinaImage, defaultDevice)
 	shape_block(width, height)
-
-picto_desktop(imageName, width, height = width)
-	picto(imageName, width, height, 'desktop')
-
-picto_tablet(imageName, width, height = width)
-	picto(imageName, width, height, 'tablet')
-
-picto_mobile(imageName, width, height = width)
-	picto(imageName, width, height, 'mobile')
+	
+	if deviceList
+		for deviceName, deviceSize in deviceList
+			+device(deviceName)
+				shape_block(deviceSize.width, deviceSize.height)
 
 /*--------------------------*/
 
-logo(imageName, width, height = width, device = 'desktop')
-	picto(imageName, width, height, device)
-
-logo_desktop(imageName, width, height = width)
-	picto_desktop(imageName, width, height)
-
-logo_tablet(imageName, width, height = width)
-	picto_tablet(imageName, width, height)
-
-logo_mobile(imageName, width, height = width)
-	picto_mobile(imageName, width, height)
+logo(imageName, width, height = width, deviceList = null, retinaImage = image_options.retinaImage, defaultDevice = image_options.defaultDevice)
+	picto(imageName, width, height, deviceList, retinaImage, defaultDevice)
